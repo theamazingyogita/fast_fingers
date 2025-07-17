@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'countdown_timer.dart';
@@ -31,8 +33,32 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   bool start = false;
+  late AnimationController animationController;
+  late Timer timer;
+  int seconds = 0;
+  int minutes = 0;
+
+  @override
+  void initState() {
+    animationController = AnimationController(vsync: this);
+    super.initState();
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (seconds <= 59) {
+          seconds = seconds + 1;
+        } else {
+          timer.cancel();
+          seconds = 0;
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       letterSpacing: 2,
                     ),
                     onChanged: (value) {
-                      start = true;
+                      print("got here inside stat timere out fusm vmfd");
+                      startTimer();
                     },
                     decoration: InputDecoration(
                       border: InputBorder.none,
@@ -116,7 +143,26 @@ class _MyHomePageState extends State<MyHomePage> {
                       fontWeight: FontWeight.w200,
                     ),
                   ),
-                  CountdownTimer(start: start),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(80),
+                    ),
+                    padding: EdgeInsets.all(30),
+                    child: AnimatedBuilder(
+                      animation: animationController,
+                      builder: (context, child) {
+                        return Text(
+                          "$minutes:$seconds",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 50,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ],
