@@ -7,3 +7,21 @@ A passage appears on screen and the timer starts as soon as you begin typing. Co
 There are two modes. Normal mode is where you type the passage yourself, and you can restart at any time with the Restart button or the Esc key. Test mode types a perfect run for you, so you can see the success screen. It is only shown when running in debug mode.
 
 To run it, use flutter run -d chrome.
+
+## Screenshots
+
+Ready to start
+
+![Ready to start](screenshots/start.png)
+
+Typing in progress
+
+![Typing in progress](screenshots/typing.png)
+
+Result screen
+
+![Result screen](screenshots/result.png)
+
+## Demo
+
+[Watch the screen recording](screenshots/demo.mov)
