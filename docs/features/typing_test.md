@@ -5,7 +5,7 @@ Shows a passage and measures how fast and accurately the user types it. The
 clock starts on the first keystroke and runs for 60 seconds, or until the
 passage is finished. An on screen keyboard lights up the key being pressed and
 outlines the key the passage expects next. Correct characters turn green.
-A run with no mistakes ends with a celebration: a check badge, confetti and a
+A passage typed in full with no mistakes ends with a celebration: a check badge, confetti and a
 count up of the WPM.
 
 ## Flow
@@ -39,7 +39,8 @@ TypingStatus.ready, TypingStatus.running, TypingStatus.finished
 - Accuracy is measured on what is currently typed, so fixing a mistake with backspace restores it
 - Backspace before starting or after finishing does nothing
 - Keys held with Ctrl or Cmd are ignored so browser shortcuts keep working
-- Finishing inside the first second counts as one second, so WPM never divides by zero
+- WPM uses time measured to a tenth of a second, with a one second floor so the first keystrokes do not show a huge number
+- The celebration only plays when the whole passage is typed with no mistakes, running out of time never counts as perfect
 - Keys are ignored while the test run is typing, so it always ends with no mistakes
 - The test button is hidden in release builds
 - Tab is swallowed so focus cannot move to a button, which would leave keystrokes going nowhere while the clock runs

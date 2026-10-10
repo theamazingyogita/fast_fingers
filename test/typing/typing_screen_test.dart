@@ -38,6 +38,7 @@ void main() {
 
     await tester.sendKeyUpEvent(LogicalKeyboardKey.keyA);
     await tester.pump(const Duration(seconds: 2));
+    await tester.pump(const Duration(milliseconds: 300));
     expect(_key(tester, 'a').isPressed, isFalse);
     expect(find.text('0:58'), findsOneWidget);
   });
@@ -136,6 +137,7 @@ void main() {
 
     await tester.sendKeyEvent(LogicalKeyboardKey.keyA, character: 'a');
     await tester.pump(const Duration(seconds: 3));
+    await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('0:57'), findsOneWidget);
 
     await tester.tap(find.text('Restart (Esc)'));
@@ -195,5 +197,21 @@ void main() {
     expect(find.text('Keep going!'), findsOneWidget);
     await tester.pump(const Duration(minutes: 1));
     await tester.pumpAndSettle();
+  });
+
+  testWidgets('time running out on an empty passage is not perfect', (
+    tester,
+  ) async {
+    await _pumpScreen(tester, ['abcdef']);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.keyA, character: 'a');
+    await tester.sendKeyEvent(LogicalKeyboardKey.backspace);
+    await tester.pump(const Duration(minutes: 1));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Try again'), findsOneWidget);
+    expect(find.text('0 WPM'), findsOneWidget);
+    expect(find.text('Perfect!'), findsNothing);
+    expect(find.byType(ConfettiBurst), findsNothing);
   });
 }

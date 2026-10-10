@@ -16,28 +16,34 @@ class StatsBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final minutes = remainingSeconds ~/ 60;
-    final seconds = (remainingSeconds % 60).toString().padLeft(2, '0');
-
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 16,
       runSpacing: 16,
       children: [
-        _StatTile(label: 'TIME', value: '$minutes:$seconds'),
-        _StatTile(label: 'WPM', value: '$wordsPerMinute'),
-        _StatTile(label: 'WORDS', value: '$wordsTyped'),
-        _StatTile(label: 'ACCURACY', value: '$accuracy%'),
+        _StatTile(
+          label: 'TIME',
+          value: remainingSeconds,
+          format: (s) => '${s ~/ 60}:${(s % 60).toString().padLeft(2, '0')}',
+        ),
+        _StatTile(label: 'WPM', value: wordsPerMinute, format: _plain),
+        _StatTile(label: 'WORDS', value: wordsTyped, format: _plain),
+        _StatTile(label: 'ACCURACY', value: accuracy, format: (a) => '$a%'),
       ],
     );
   }
 }
 
 class _StatTile extends StatelessWidget {
-  const _StatTile({required this.label, required this.value});
+  const _StatTile({
+    required this.label,
+    required this.value,
+    required this.format,
+  });
 
   final String label;
-  final String value;
+  final int value;
+  final String Function(int) format;
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +59,11 @@ class _StatTile extends StatelessWidget {
       child: Column(
         spacing: 4,
         children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            transitionBuilder: (child, animation) =>
-                ScaleTransition(scale: animation, child: child),
-            child: Text(
-              value,
-              key: ValueKey(value),
+          TweenAnimationBuilder(
+            tween: IntTween(begin: value, end: value),
+            duration: const Duration(milliseconds: 250),
+            builder: (context, shown, _) => Text(
+              format(shown),
               style: theme.textTheme.headlineMedium?.copyWith(
                 color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w700,
@@ -72,3 +76,5 @@ class _StatTile extends StatelessWidget {
     );
   }
 }
+
+String _plain(int value) => '$value';

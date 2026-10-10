@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
@@ -10,11 +11,13 @@ class TypingSession extends ChangeNotifier {
     this.duration = const Duration(seconds: 60),
   }) : _passage = passage;
 
+  static const _tickInterval = Duration(milliseconds: 100);
+
   final Duration duration;
 
   String _passage;
   String _typed = '';
-  int _elapsedSeconds = 0;
+  Duration _elapsed = Duration.zero;
   TypingStatus _status = TypingStatus.ready;
   Timer? _ticker;
   Timer? _autoTyper;
@@ -23,13 +26,15 @@ class TypingSession extends ChangeNotifier {
 
   String get typed => _typed;
 
-  int get elapsedSeconds => _elapsedSeconds;
+  int get elapsedSeconds => _elapsed.inSeconds;
 
   TypingStatus get status => _status;
 
   bool get isAutoTyping => _autoTyper?.isActive ?? false;
 
-  int get remainingSeconds => duration.inSeconds - _elapsedSeconds;
+  int get remainingSeconds => duration.inSeconds - elapsedSeconds;
+
+  bool get isPerfect => _typed == _passage;
 
   String? get nextCharacter =>
       _typed.length < _passage.length ? _passage[_typed.length] : null;
@@ -48,8 +53,9 @@ class TypingSession extends ChangeNotifier {
       _typed.split(RegExp(r'\s+')).where((word) => word.isNotEmpty).length;
 
   int get wordsPerMinute {
-    if (_elapsedSeconds == 0) return 0;
-    return (correctCharacters / 5 / (_elapsedSeconds / 60)).round();
+    if (_typed.isEmpty) return 0;
+    final minutes = max(_elapsed.inMilliseconds, 1000) / 60000;
+    return (correctCharacters / 5 / minutes).round();
   }
 
   int get accuracy {
@@ -88,21 +94,22 @@ class TypingSession extends ChangeNotifier {
     _autoTyper?.cancel();
     _passage = passage;
     _typed = '';
-    _elapsedSeconds = 0;
+    _elapsed = Duration.zero;
     _status = TypingStatus.ready;
     notifyListeners();
   }
 
   void _start() {
     _status = TypingStatus.running;
-    _ticker = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
+    _ticker = Timer.periodic(_tickInterval, (_) => _tick());
   }
 
   void _tick() {
-    _elapsedSeconds++;
-    if (remainingSeconds <= 0) {
+    final before = elapsedSeconds;
+    _elapsed += _tickInterval;
+    if (_elapsed >= duration) {
       _finish();
-    } else {
+    } else if (elapsedSeconds != before) {
       notifyListeners();
     }
   }
@@ -110,7 +117,6 @@ class TypingSession extends ChangeNotifier {
   void _finish() {
     _ticker?.cancel();
     _autoTyper?.cancel();
-    if (_elapsedSeconds == 0) _elapsedSeconds = 1;
     _status = TypingStatus.finished;
     notifyListeners();
   }

@@ -75,7 +75,8 @@ void main() {
       ..type('i');
 
     expect(session.status, TypingStatus.finished);
-    expect(session.elapsedSeconds, 1);
+    expect(session.isPerfect, isTrue);
+    expect(session.wordsPerMinute, 24);
     session.type('x');
     expect(session.typed, 'hi');
     session.dispose();
@@ -140,6 +141,39 @@ void main() {
 
     expect(session.typed, isEmpty);
     expect(session.isAutoTyping, isFalse);
+    session.dispose();
+  });
+
+  testWidgets('wpm counts partial seconds', (tester) async {
+    final session = TypingSession(passage: 'a' * 100);
+
+    session.type('a');
+    await tester.pump(const Duration(milliseconds: 2500));
+    for (var i = 0; i < 24; i++) {
+      session.type('a');
+    }
+
+    expect(session.wordsPerMinute, 120);
+    session.dispose();
+  });
+
+  testWidgets('a run without mistakes is only perfect when complete', (
+    tester,
+  ) async {
+    final session = TypingSession(passage: 'hello');
+
+    session
+      ..type('h')
+      ..type('e');
+    expect(session.mistakes, 0);
+    expect(session.isPerfect, isFalse);
+
+    session
+      ..type('l')
+      ..type('l')
+      ..type('x');
+    expect(session.status, TypingStatus.finished);
+    expect(session.isPerfect, isFalse);
     session.dispose();
   });
 }

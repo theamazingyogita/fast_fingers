@@ -140,6 +140,7 @@ class _TypingScreenState extends State<TypingScreen> {
                           wordsPerMinute: _session.wordsPerMinute,
                           accuracy: _session.accuracy,
                           mistakes: _session.mistakes,
+                          isPerfect: _session.isPerfect,
                           onRestart: _restart,
                         )
                       else ...[

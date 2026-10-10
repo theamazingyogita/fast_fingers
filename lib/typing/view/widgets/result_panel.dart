@@ -9,15 +9,15 @@ class ResultPanel extends StatelessWidget {
     required this.wordsPerMinute,
     required this.accuracy,
     required this.mistakes,
+    required this.isPerfect,
     required this.onRestart,
   });
 
   final int wordsPerMinute;
   final int accuracy;
   final int mistakes;
+  final bool isPerfect;
   final VoidCallback onRestart;
-
-  bool get isPerfect => mistakes == 0;
 
   @override
   Widget build(BuildContext context) {
