@@ -1,16 +1,27 @@
-# fast_fingers
+# Fast Fingers
 
-A new Flutter project.
+A fun, simple Flutter web app to test your typing speed.
 
-## Getting Started
+A passage appears on screen and the timer starts as soon as you begin typing. Correct letters turn green and mistakes turn red, while an on screen keyboard lights up the keys as you press them. Your speed, word count and accuracy update live, and you have 60 seconds or until the passage ends.
 
-This project is a starting point for a Flutter application.
+There are two modes. Normal mode is where you type the passage yourself, and you can restart at any time with the Restart button or the Esc key. Test mode types a perfect run for you, so you can see the success screen. It is only shown when running in debug mode.
 
-A few resources to get you started if this is your first Flutter project:
+To run it, use flutter run -d chrome.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Screenshots
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Ready to start
+
+![Ready to start](screenshots/start.png)
+
+Typing in progress
+
+![Typing in progress](screenshots/typing.png)
+
+Result screen
+
+![Result screen](screenshots/result.png)
+
+## Demo
+
+[Watch the screen recording](screenshots/demo.mov)
