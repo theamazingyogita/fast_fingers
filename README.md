@@ -24,4 +24,6 @@ Result screen
 
 ## Demo
 
-[Watch the screen recording](screenshots/demo.mov)
+https://github.com/user-attachments/assets/a1916280-eb3a-436b-9acd-4fef42e48e0c
+
+
